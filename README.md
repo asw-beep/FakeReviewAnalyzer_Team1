@@ -1,289 +1,153 @@
-<div align="center">
+# Review Trust Analyzer
 
-# 🔍 Review Trust Analyzer
+## Team Members
 
-### AI-Powered Fake Review Detection System
+Aswin M — 2023BCS0012<br>
+Divon John — 2023BCS0024<br>
+Mahadev P Nair — 2023BCS0018<br>
+Zewin Jos — 2023BCS0063<br>
 
-*CSS-321 Data Warehousing & Mining Project — Group 1*
+## Problem Statement
 
-[![R](https://img.shields.io/badge/R-4.3+-276DC3?logo=r&logoColor=white)](https://www.r-project.org/)
-[![Random Forest](https://img.shields.io/badge/Model-Random%20Forest-228B22)](https://en.wikipedia.org/wiki/Random_forest)
-[![VADER](https://img.shields.io/badge/Sentiment-VADER-orange)](https://github.com/cjhutto/vaderSentiment)
-[![LDA](https://img.shields.io/badge/Topics-LDA-blueviolet)](https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation)
+Online product recommendations and reviews heavily influence modern purchasing decisions. Unfortunately, this creates an incentive for malicious actors to generate fake reviews to artificially inflate or deflate product ratings. These fake reviews, often computer-generated, mislead consumers and damage the trust in e-commerce platforms. The problem we are solving is the automatic identification of such fake, computer-generated reviews among genuine user feedback.
 
----
+## Objectives
 
-</div>
+The main goals of this project are:
+1. To develop a robust, end-to-end machine learning pipeline capable of detecting fake product reviews.
+2. To extract meaningful features from raw text, including TF-IDF, sentiment scores, and behavioral patterns.
+3. To train and evaluate multiple classifiers (Naive Bayes, Logistic Regression, Random Forest) for accuracy and reliability.
+4. To analyze reviewer networks for coordinated fraudulent activities.
+5. To build a user-friendly web interface allowing real-time fake review prediction.
 
-## 📌 Overview
+## Dataset
 
-**Review Trust Analyzer** is an end-to-end machine learning pipeline that detects fake (computer-generated) product reviews using a combination of NLP, network analysis, and ensemble classification. The system processes raw Amazon and fake review datasets through 9 analytical stages, trains 3 classifiers, and provides a sleek web-based prediction interface.
+**Source:** 
+1. Amazon Fine Food Reviews Dataset: [https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews)
+2. Fake Reviews Dataset: [https://www.kaggle.com/datasets/mexwell/fake-reviews-dataset](https://www.kaggle.com/datasets/mexwell/fake-reviews-dataset)
 
-<div align="center">
+**Number of observations:** 
+We sampled 80,000 genuine reviews from the Amazon dataset and utilized 40,000 reviews (both computer-generated and authentic) from the Fake Reviews dataset for a robust analysis.
 
-| Component | Detail |
-|-----------|--------|
-| **Datasets** | Amazon Fine Food Reviews (80K sampled) + Fake Reviews Dataset (40K) |
-| **Best Model** | Random Forest (200 trees, TF-IDF + dense features) |
-| **Features** | TF-IDF (top 5000 terms), handcrafted, VADER sentiment, graph-based |
-| **Pipeline** | 9 sequential R scripts |
-| **Frontend** | Single-page HTML/CSS/JS |
-| **API** | R Plumber (REST) |
+**Number of variables:** 
+Initial variables range from text, rating, and label, which are expanded to 106 features during our feature engineering process.
 
-</div>
+**Brief description of important attributes:**
+- `text`/`text_`: The actual textual content of the review
+- `rating`: Star rating out of 5
+- `label`: Information on whether the review is computer-generated (CG/Fake) or original (OR/Genuine)
+- TF-IDF metrics: Top terms extracted over the corpus
+- Handcrafted features: `review_length`, `exclaim_count`, `caps_ratio`, `avg_word_len`, `sentiment_score`
 
----
+*(Please refer to `data/dataset_description.md` for more details on downlading the dataset.)*
 
-## 📸 Screenshots & Demo
+## Methodology
 
-### Prediction Interface
+### Data Preprocessing
+- **Text Cleaning:** Removed URLs and punctuation, converted text to lowercase.
+- **Tokenization & Stopwords:** Tokenized the strings, removed common English stopwords, and performed stemming using the Porter stemmer to reduce words to their root form.
+- **Unification:** Both datasets were processed using the same reusable `clean_text()` function.
 
-Users paste any review text, and the model outputs a Fake/Genuine verdict with confidence probabilities and feature breakdown.
+### Exploratory Analysis
+- **Distribution Analysis:** Checked rating distributions, review lengths, and class imbalances.
+- **Sentiment Analysis:** Utilized VADER sentiment scoring on the texts and matched sentiment against actual ratings to flag contradictory (suspicious) entries.
+- **Topic Modeling & Graphing:** Applied Latent Dirichlet Allocation (LDA) with 8 topics. Also generated reviewer-reviewer graphs to locate suspicious co-review clusters.
+- **Anomaly Detection:** Used Isolation Forest to highlight product-level metadata anomalies.
 
-<div align="center">
-<img src="figures/screenshot_hero.png" alt="Hero Section" width="700">
-<br><em>Main page — Input any review for instant analysis</em>
-</div>
+### Models Used
+1. **Naive Bayes:** As a baseline probabilistic model using dense text features.
+2. **Logistic Regression:** To model the exact probabilities of a review being fake using structural features.
+3. **Random Forest:** An ensemble method utilizing both dense features and a sample of top TF-IDF terms (200 trees).
 
-<br>
+### Evaluation Methods
+- Visualized confusion matrices to check False Positives vs False Negatives.
+- Evaluated and compared all models based on **Accuracy**, **Precision**, **Recall**, and **F1-Score**.
+- Used feature importance scores to explain the Random Forest model's decisions.
 
-<div align="center">
-<img src="figures/screenshot_prediction.png" alt="Prediction Result" width="700">
-<br><em>Prediction result with probability bars and feature stats</em>
-</div>
+## Results
 
-### Reports Dashboard
+We evaluated our models on an 80/20 train-test split. The **Random Forest** comprehensively outperformed the other models, reaching the highest accuracy and F1 score:
 
-All 22 analysis visualizations organized by category with interactive filter tabs and a lightbox viewer.
+| Model | Accuracy | Precision | Recall | F1 |
+|-------|----------|-----------|--------|----|
+| Naive Bayes | 0.668 | 0.694 | 0.584 | 0.634 |
+| Logistic Regression | 0.685 | 0.664 | 0.767 | 0.712 |
+| **Random Forest** | **0.859** | **0.857** | **0.862** | **0.860** |
 
-<div align="center">
-<img src="figures/screenshot_reports.png" alt="Reports Dashboard" width="700">
-<br><em>Reports dashboard with all visualizations</em>
-</div>
+## Key Visualizations
 
-<br>
+### Confusion Matrix (Random Forest)
+![Confusion Matrix](results/figures/fig17_confusion_matrix.png)
 
-<div align="center">
-<img src="figures/screenshot_filters.png" alt="Category Filtering" width="700">
-<br><em>Filter tabs to view specific analysis categories</em>
-</div>
+### Feature Importance
+![Feature Importance](results/figures/fig18_feature_importance.png)
 
-### Demo Video
+### Model Comparison
+![Model Comparison](results/figures/fig19_model_comparison.png)
 
-<div align="center">
-<img src="figures/demo_video.webp" alt="Demo" width="700">
-<br><em>Full walkthrough — prediction + reports browsing</em>
-</div>
+### EDA - Class Balance
+![Class Balance](results/figures/eda_03_class_balance.png)
 
----
-
-## 🏗️ Project Architecture
-
-```
-review-trust-analyzer/
-├── 01_eda.R                  # Stage 1: Data loading & exploratory analysis
-├── 02_preprocess.R           # Stage 2: Text preprocessing & tokenization
-├── 03_features.R             # Stage 3: TF-IDF + handcrafted feature extraction
-├── 04_sentiment.R            # Stage 4: VADER sentiment analysis
-├── 05_topic_modeling.R       # Stage 5: LDA topic modeling (8 topics)
-├── 06_graph_analysis.R       # Stage 6: Reviewer behavioral graph analysis
-├── 07_anomaly_detection.R    # Stage 7: Isolation Forest anomaly detection
-├── 08_classification.R       # Stage 8: Train & compare 3 classifiers
-├── 09_wordcloud.R            # Stage 9: Word cloud generation
-├── predict.R                 # Standalone prediction script
-├── api.R                     # Plumber REST API for predictions
-├── dataset/                  # Raw CSVs + intermediate .rds files
-│   ├── amazon_reviews.csv
-│   ├── fake_reviews.csv
-│   └── *.rds                 # Pipeline intermediate outputs
-├── trained_models/           # Serialized trained models
-│   ├── random_forest.rds
-│   ├── logistic_regression.rds
-│   ├── naive_bayes.rds
-│   └── isolation_forest.rds
-├── figures/                  # All 22 generated visualizations
-│   ├── eda_01 → eda_05       # Exploratory Data Analysis
-│   ├── fig05 → fig06         # Feature Engineering
-│   ├── fig07 → fig09         # Sentiment Analysis
-│   ├── fig10 → fig11         # Topic Modeling
-│   ├── fig12 → fig14         # Graph Analysis
-│   ├── fig15 → fig16         # Anomaly Detection
-│   ├── fig17 → fig19         # Classification
-│   └── fig20 → fig21         # Word Clouds
-└── frontend/                 # Web interface
-    ├── index.html
-    ├── style.css
-    └── script.js
-```
-
----
-
-## ⚙️ Pipeline — 9 Stages
-
-### Stage 1 — Exploratory Data Analysis (`01_eda.R`)
-- Loads Amazon Fine Food Reviews (568K → 80K sampled) and Fake Reviews (40K)
-- Standardizes columns, computes review length, checks class balance
-- **Outputs:** 5 EDA figures (rating distribution, review length, class balance, verified status, length by label)
-
-### Stage 2 — Text Preprocessing (`02_preprocess.R`)
-- Lowercasing → URL/punctuation removal → tokenization → stopword removal → stemming
-- Builds a reusable `clean_text()` function applied to both datasets
-- **Outputs:** Cleaned `clean_text` column for all reviews
-
-### Stage 3 — Feature Engineering (`03_features.R`)
-- **TF-IDF matrix:** Top 5,000 terms from the fake reviews dataset
-- **Handcrafted features:** `review_length`, `exclaim_count`, `caps_ratio`, `avg_word_len`
-- **Outputs:** 2 figures (length distribution, exclamation count by label)
-
-### Stage 4 — Sentiment Analysis (`04_sentiment.R`)
-- VADER sentiment scoring on full fake dataset (40K) + Amazon sample (10K)
-- Rating-sentiment mismatch feature (5★ + negative sentiment → suspicious)
-- **Outputs:** 3 figures (sentiment distribution, rating×sentiment heatmap, sentiment by label)
-
-### Stage 5 — Topic Modeling (`05_topic_modeling.R`)
-- LDA with 8 topics, Gibbs sampling (500 iterations)
-- Topics: Product Quality, Food & Taste, Packaging, Value, Health, Customer Experience, Pet Food, Coffee
-- **Outputs:** 2 figures (top terms per topic, topic distribution)
-
-### Stage 6 — Graph Analysis (`06_graph_analysis.R`)
-- Per-reviewer features: 5-star ratio, review velocity, burst score
-- Detecting co-review clusters (same product within 48 hours)
-- Builds a reviewer-reviewer graph, flags suspicious clusters
-- **Outputs:** 3 figures (5-star ratio, review velocity, reviewer graph)
-
-### Stage 7 — Anomaly Detection (`07_anomaly_detection.R`)
-- Product-level aggregation: review count, rating variance, sentiment std
-- Isolation Forest (100 trees) → top 10% flagged as anomalous
-- **Outputs:** 2 figures (anomaly scatter, score distribution)
-
-### Stage 8 — Classification (`08_classification.R`)
-- Trains 3 models: **Naive Bayes**, **Logistic Regression**, **Random Forest**
-- Feature matrix: TF-IDF top 100 terms + 6 dense features = 106 features
-- 80/20 stratified train/test split
-- **Outputs:** 3 figures (confusion matrix, feature importance, model comparison)
-
-### Stage 9 — Word Clouds (`09_wordcloud.R`)
-- Generates word clouds for fake and genuine reviews
-- **Outputs:** 2 figures (fake word cloud, genuine word cloud)
-
----
-
-## 🧪 Key Visualizations
-
-<div align="center">
-
-| Analysis | Preview |
-|----------|---------|
-| **Confusion Matrix** | <img src="figures/fig17_confusion_matrix.png" width="350"> |
-| **Feature Importance** | <img src="figures/fig18_feature_importance.png" width="350"> |
-| **Model Comparison** | <img src="figures/fig19_model_comparison.png" width="350"> |
-| **Anomaly Detection** | <img src="figures/fig15_anomaly_scatter.png" width="350"> |
-| **Sentiment Heatmap** | <img src="figures/fig08_rating_sentiment_heatmap.png" width="350"> |
-| **LDA Topics** | <img src="figures/fig10_lda_top_terms.png" width="350"> |
-
-</div>
-
----
-
-## 🚀 Getting Started
+## How to Run the Project
 
 ### Prerequisites
-
-```bash
-# R 4.3+ with these packages:
-install.packages(c(
-  "tidyverse", "tidytext", "SnowballC", "scales", "lubridate",
-  "vader", "topicmodels", "igraph", "isotree", "slam",
-  "caret", "randomForest", "e1071", "Matrix",
-  "wordcloud", "wordcloud2", "RColorBrewer",
-  "plumber"
-))
+Run the newly created `requirements.R` script to install all needed R packages:
+```r
+source("requirements.R")
 ```
 
-### Datasets
-
-1. [Amazon Fine Food Reviews](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews) → save as `dataset/amazon_reviews.csv`
-2. [Fake Reviews Dataset](https://www.kaggle.com/datasets/mexwell/fake-reviews-dataset) → save as `dataset/fake_reviews.csv`
-
-### Run the Pipeline
-
-```bash
-# Run all 9 stages sequentially
-Rscript 01_eda.R
-Rscript 02_preprocess.R
-Rscript 03_features.R
-Rscript 04_sentiment.R
-Rscript 05_topic_modeling.R
-Rscript 06_graph_analysis.R
-Rscript 07_anomaly_detection.R
-Rscript 08_classification.R
-Rscript 09_wordcloud.R
+Alternatively, run:
+```r
+install.packages(c("tidyverse", "tidytext", "SnowballC", "scales", "lubridate", "vader", "topicmodels", "igraph", "isotree", "slam", "caret", "randomForest", "e1071", "Matrix", "wordcloud", "wordcloud2", "RColorBrewer", "plumber"))
 ```
 
-### Use the Prediction API
+### Folder Organization
+- `scripts/`: Contains the 9 R scripts for the pipeline, plus the prediction API and utilities.
+- `data/`: Location for raw datasets and intermediate serialized files.
+- `results/figures/`: Auto-generated visualization plots from the analysis.
+- `results/tables/`: Tabular evaluation results.
+- `app/`: Web frontend (HTML/CSS/JS) for interacting with the model.
+- `trained_models/`: Serialized models (`.rds` files) for quick prediction loading.
+
+### Running the Analysis
+The pipeline is divided into sequential stages. You can execute them in order from within the `scripts/` directory, or from the root directory specifying the path:
 
 ```bash
-# Start the Plumber API
-Rscript -e "plumber::plumb('api.R')\$run(port=8787, host='0.0.0.0')"
-
-# Test with curl
-curl -X POST http://localhost:8787/predict \
-  -H "Content-Type: application/json" \
-  -d '{"review_text": "This product is absolutely amazing!!"}'
+Rscript scripts/01_eda.R
+Rscript scripts/02_preprocess.R
+Rscript scripts/03_features.R
+Rscript scripts/04_sentiment.R
+Rscript scripts/05_topic_modeling.R
+Rscript scripts/06_graph_analysis.R
+Rscript scripts/07_anomaly_detection.R
+Rscript scripts/08_classification.R
+Rscript scripts/09_wordcloud.R
 ```
 
-### Open the Frontend
+### Running the App
+Start the Plumber API server in one terminal:
+```bash
+Rscript -e "plumber::plumb('scripts/api.R')\$run(port=8787, host='0.0.0.0')"
+```
+Then, double-click `app/index.html` to open the frontend web interface and test your reviews against the trained model.
 
-Simply open `frontend/index.html` in your browser. The prediction works even without the API (uses a heuristic fallback), but for real model predictions, start the Plumber API first.
+## Conclusion
 
----
+The Review Trust Analyzer successfully implements an end-to-end framework capable of distinguishing genuine reviews from computer-generated fake ones. We concluded that utilizing a combination of textual substance (TF-IDF features) alongside behavioral characteristics (caps lock metadata, exclamation usage, review lengths, and rating mismatch) leads to highly accurate fake detection. The Random Forest classifier emerged as the most suitable model for this configuration, effectively handling our wide feature matrix and delivering robust precision without sacrificing recall.
 
-## 🛠️ Tech Stack
+## Contribution
 
-| Layer | Technology |
-|-------|-----------|
-| **Language** | R 4.3+ |
-| **NLP** | tidytext, SnowballC, TF-IDF |
-| **Sentiment** | VADER (vader package) |
-| **Topic Modeling** | LDA (topicmodels package, Gibbs sampling) |
-| **Graph Analysis** | igraph (network clustering) |
-| **Anomaly Detection** | Isolation Forest (isotree package) |
-| **Classification** | Random Forest, Logistic Regression, Naive Bayes |
-| **API** | Plumber (REST) |
-| **Frontend** | HTML5, CSS3, Vanilla JavaScript |
-| **Visualization** | ggplot2, wordcloud |
+| Name | Contribution |
+|------|--------------|
+| Aswin M | Feature engineering, Random Forest and Isolation Forest anomaly detection, network graph analysis and model integration |
+| Divon John | Data preprocessing, exploratory data analysis visualization, web app frontend development |
+| Mahadev P Nair | Sentiment analysis, topic modeling implementation, system evaluations, REST API building, |
+| Zewin Jos | Naive Bayes and Logistic Regression baseline models development |
 
----
+## References
 
-## 📂 Outputs Summary
-
-| Category | Count | Figures |
-|----------|-------|---------|
-| EDA | 5 | `eda_01` → `eda_05` |
-| Feature Engineering | 2 | `fig05`, `fig06` |
-| Sentiment Analysis | 3 | `fig07` → `fig09` |
-| Topic Modeling | 2 | `fig10`, `fig11` |
-| Graph Analysis | 3 | `fig12` → `fig14` |
-| Anomaly Detection | 2 | `fig15`, `fig16` |
-| Classification | 3 | `fig17` → `fig19` |
-| Word Clouds | 2 | `fig20`, `fig21` |
-| **Total** | **22** | |
-
----
-
-## 👥 Team
-
-**Group 1** — CSS-321 Data Warehousing & Mining, IIITK
-
-| Member |
-|--------|
-| Aswin M |
-| Divon John |
-| Mahadev P Nair |
-| Zewin Jos |
-
----
-
-<div align="center">
-<sub>Built with ❤️ using R and data mining techniques</sub>
-</div>
+1. B. Liu, "Sentiment Analysis and Opinion Mining," Morgan & Claypool Publishers, 2012.
+2. VADER Sentiment Analysis Tool ([GitHub](https://github.com/cjhutto/vaderSentiment))
+3. Amazon Fine Food Reviews Dataset - Kaggle ([Link](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews))
+4. Fake Reviews Dataset - Kaggle ([Link](https://www.kaggle.com/datasets/mexwell/fake-reviews-dataset))
+5. R `randomForest` Package Documentation

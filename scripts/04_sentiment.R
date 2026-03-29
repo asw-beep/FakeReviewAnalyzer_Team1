@@ -8,8 +8,8 @@ library(vader)
 library(scales)
 
 cat("Loading Stage 3 data...\n")
-amazon <- readRDS("dataset/amazon_stage3.rds")
-fake   <- readRDS("dataset/fake_stage3.rds")
+amazon <- readRDS("data/amazon_stage3.rds")
+fake   <- readRDS("data/fake_stage3.rds")
 cat("Amazon:", nrow(amazon), "rows\n")
 cat("Fake:  ", nrow(fake),   "rows\n")
 
@@ -129,7 +129,7 @@ p1 <- amazon_sample %>%
   scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.15))) +
   labs(title = "Amazon Reviews: Sentiment Distribution (10K sample)", x = "Sentiment", y = "Count") +
   theme_minimal(base_size = 13) + theme(plot.title = element_text(face = "bold"))
-ggsave("figures/fig07_sentiment_distribution.png", p1, width = 7, height = 5, dpi = 150)
+ggsave("results/figures/fig07_sentiment_distribution.png", p1, width = 7, height = 5, dpi = 150)
 
 p2 <- amazon_sample %>%
   count(overall, sentiment_label) %>%
@@ -141,7 +141,7 @@ p2 <- amazon_sample %>%
   scale_fill_gradient(low = "#deebf7", high = "#08519c", labels = percent) +
   labs(title = "Star Rating vs Sentiment Label", x = "VADER Sentiment", y = "Star Rating", fill = "% of row") +
   theme_minimal(base_size = 13) + theme(plot.title = element_text(face = "bold"))
-ggsave("figures/fig08_rating_sentiment_heatmap.png", p2, width = 7, height = 5, dpi = 150)
+ggsave("results/figures/fig08_rating_sentiment_heatmap.png", p2, width = 7, height = 5, dpi = 150)
 
 p3 <- fake %>%
   ggplot(aes(x = sentiment_score, fill = label_name)) +
@@ -149,14 +149,14 @@ p3 <- fake %>%
   scale_fill_manual(values = c("Genuine"="#2ca25f","Fake"="#de2d26")) +
   labs(title = "Sentiment Score: Fake vs Genuine", x = "VADER Compound Score", y = "Density", fill = "Type") +
   theme_minimal(base_size = 13) + theme(plot.title = element_text(face = "bold"), legend.position = "top")
-ggsave("figures/fig09_sentiment_by_label.png", p3, width = 7, height = 5, dpi = 150)
+ggsave("results/figures/fig09_sentiment_by_label.png", p3, width = 7, height = 5, dpi = 150)
 
-cat("Saved: figures/fig07, fig08, fig09\n")
+cat("Saved: results/figures/fig07, fig08, fig09\n")
 
-saveRDS(amazon, "dataset/amazon_stage4.rds")
-saveRDS(fake,   "dataset/fake_stage4.rds")
+saveRDS(amazon, "data/amazon_stage4.rds")
+saveRDS(fake,   "data/fake_stage4.rds")
 
 cat("\n=== Stage 4 Complete ===\n")
-cat("Saved: dataset/amazon_stage4.rds\n")
-cat("Saved: dataset/fake_stage4.rds\n")
+cat("Saved: data/amazon_stage4.rds\n")
+cat("Saved: data/fake_stage4.rds\n")
 cat("Next: run 05_topic_modeling.R\n")

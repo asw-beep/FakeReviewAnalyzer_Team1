@@ -15,8 +15,8 @@ library(e1071)
 library(scales)
 
 cat("Loading data...\n")
-fake   <- readRDS("dataset/fake_stage4.rds")
-vocab  <- readRDS("dataset/tfidf_vocabulary.rds")
+fake   <- readRDS("data/fake_stage4.rds")
+vocab  <- readRDS("data/tfidf_vocabulary.rds")
 cat("Fake reviews:", nrow(fake), "rows\n")
 
 # --------------------------------------------------------------------------
@@ -185,7 +185,7 @@ p1 <- ggplot(cm_df, aes(x = Reference, y = Prediction, fill = pct)) +
   theme_minimal(base_size = 13) +
   theme(plot.title = element_text(face = "bold"))
 
-ggsave("figures/fig17_confusion_matrix.png", p1, width = 6, height = 5, dpi = 150)
+ggsave("results/figures/fig17_confusion_matrix.png", p1, width = 6, height = 5, dpi = 150)
 
 ## Feature importance
 imp_df <- importance(rf_model) %>%
@@ -202,7 +202,7 @@ p2 <- ggplot(imp_df, aes(x = MeanDecreaseGini,
   theme_minimal(base_size = 11) +
   theme(plot.title = element_text(face = "bold"))
 
-ggsave("figures/fig18_feature_importance.png", p2, width = 8, height = 6, dpi = 150)
+ggsave("results/figures/fig18_feature_importance.png", p2, width = 8, height = 6, dpi = 150)
 
 ## Model comparison bar chart
 p3 <- comparison %>%
@@ -221,9 +221,9 @@ p3 <- comparison %>%
   theme(plot.title = element_text(face = "bold"),
         legend.position = "top")
 
-ggsave("figures/fig19_model_comparison.png", p3, width = 8, height = 5, dpi = 150)
+ggsave("results/figures/fig19_model_comparison.png", p3, width = 8, height = 5, dpi = 150)
 
-cat("Saved: figures/fig17, fig18, fig19\n")
+cat("Saved: results/figures/fig17, fig18, fig19\n")
 
 # --------------------------------------------------------------------------
 # 8.8  SAVE MODELS
@@ -237,5 +237,5 @@ cat("\n=== Stage 8 Complete ===\n")
 cat("Saved: trained_models/naive_bayes.rds\n")
 cat("Saved: trained_models/logistic_regression.rds\n")
 cat("Saved: trained_models/random_forest.rds\n")
-cat("Saved: figures/fig17, fig18, fig19\n")
+cat("Saved: results/figures/fig17, fig18, fig19\n")
 cat("\n ALL STAGES COMPLETE — Project pipeline finished!\n")

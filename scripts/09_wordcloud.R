@@ -9,7 +9,7 @@ library(wordcloud)
 library(RColorBrewer)
 
 cat("Loading data...\n")
-fake <- readRDS("dataset/fake_stage4.rds")
+fake <- readRDS("data/fake_stage4.rds")
 
 dir.create("figures", showWarnings = FALSE)
 
@@ -57,7 +57,7 @@ distinctive_genuine <- log_odds %>%
 # Word Cloud — Distinctive FAKE words
 # --------------------------------------------------------------------------
 cat("Generating fake reviews word cloud...\n")
-png("figures/fig20_wordcloud_fake.png", width = 900, height = 650, res = 130)
+png("results/figures/fig20_wordcloud_fake.png", width = 900, height = 650, res = 130)
 par(bg = "#1a1a2e", mar = c(0, 0, 3, 0))
 wordcloud(
   words        = distinctive_fake$word,
@@ -71,13 +71,13 @@ wordcloud(
 title("Fake Reviews — Distinctive Vocabulary",
       col.main = "white", cex.main = 1.3)
 dev.off()
-cat("Saved: figures/fig20_wordcloud_fake.png\n")
+cat("Saved: results/figures/fig20_wordcloud_fake.png\n")
 
 # --------------------------------------------------------------------------
 # Word Cloud — Distinctive GENUINE words
 # --------------------------------------------------------------------------
 cat("Generating genuine reviews word cloud...\n")
-png("figures/fig21_wordcloud_genuine.png", width = 900, height = 650, res = 130)
+png("results/figures/fig21_wordcloud_genuine.png", width = 900, height = 650, res = 130)
 par(bg = "#0d1f0d", mar = c(0, 0, 3, 0))
 wordcloud(
   words        = distinctive_genuine$word,
@@ -91,7 +91,7 @@ wordcloud(
 title("Genuine Reviews — Distinctive Vocabulary",
       col.main = "white", cex.main = 1.3)
 dev.off()
-cat("Saved: figures/fig21_wordcloud_genuine.png\n")
+cat("Saved: results/figures/fig21_wordcloud_genuine.png\n")
 
 # --------------------------------------------------------------------------
 # Comparison Table — now shows truly distinct words

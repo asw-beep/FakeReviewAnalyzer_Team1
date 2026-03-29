@@ -20,8 +20,8 @@ library(ggplot2)
 
 cat("=== Loading datasets ===\n")
 
-amazon <- read_csv("dataset/amazon_reviews.csv", show_col_types = FALSE)
-fake   <- read_csv("dataset/fake_reviews.csv",   show_col_types = FALSE)
+amazon <- read_csv("data/amazon_reviews.csv", show_col_types = FALSE)
+fake   <- read_csv("data/fake_reviews.csv",   show_col_types = FALSE)
 
 # --------------------------------------------------------------------------
 # 1.2  STANDARDISE COLUMN NAMES
@@ -139,9 +139,9 @@ p1 <- ggplot(amazon, aes(x = factor(overall))) +
        x = "Star Rating", y = "Count") +
   theme(plot.title = element_text(face = "bold"))
 
-ggsave("figures/eda_01_rating_distribution.png", p1,
+ggsave("results/figures/eda_01_rating_distribution.png", p1,
        width = 7, height = 5, dpi = 150)
-cat("Saved: figures/eda_01_rating_distribution.png\n")
+cat("Saved: results/figures/eda_01_rating_distribution.png\n")
 
 ## --- Fig B: Review Length Histogram ---
 p2 <- ggplot(amazon %>% filter(review_length < 400),
@@ -153,9 +153,9 @@ p2 <- ggplot(amazon %>% filter(review_length < 400),
        x = "Number of Words", y = "Count") +
   theme(plot.title = element_text(face = "bold"))
 
-ggsave("figures/eda_02_review_length.png", p2,
+ggsave("results/figures/eda_02_review_length.png", p2,
        width = 7, height = 5, dpi = 150)
-cat("Saved: figures/eda_02_review_length.png\n")
+cat("Saved: results/figures/eda_02_review_length.png\n")
 
 ## --- Fig C: Fake Dataset Class Balance ---
 fake_counts <- fake %>%
@@ -174,9 +174,9 @@ p3 <- ggplot(fake_counts, aes(x = label_name, y = n, fill = label_name)) +
        x = "Review Type", y = "Count") +
   theme(plot.title = element_text(face = "bold"))
 
-ggsave("figures/eda_03_class_balance.png", p3,
+ggsave("results/figures/eda_03_class_balance.png", p3,
        width = 6, height = 5, dpi = 150)
-cat("Saved: figures/eda_03_class_balance.png\n")
+cat("Saved: results/figures/eda_03_class_balance.png\n")
 
 ## --- Fig D: Verified vs Unverified (Amazon) ---
 p4 <- amazon %>%
@@ -193,9 +193,9 @@ p4 <- amazon %>%
        x = "Status", y = "Count") +
   theme(plot.title = element_text(face = "bold"))
 
-ggsave("figures/eda_04_verified_status.png", p4,
+ggsave("results/figures/eda_04_verified_status.png", p4,
        width = 6, height = 5, dpi = 150)
-cat("Saved: figures/eda_04_verified_status.png\n")
+cat("Saved: results/figures/eda_04_verified_status.png\n")
 
 ## --- Fig E: Review Length by Fake vs Genuine ---
 p5 <- ggplot(fake %>% filter(review_length < 300),
@@ -208,19 +208,19 @@ p5 <- ggplot(fake %>% filter(review_length < 300),
   theme(plot.title = element_text(face = "bold"),
         legend.position = "top")
 
-ggsave("figures/eda_05_length_by_label.png", p5,
+ggsave("results/figures/eda_05_length_by_label.png", p5,
        width = 7, height = 5, dpi = 150)
-cat("Saved: figures/eda_05_length_by_label.png\n")
+cat("Saved: results/figures/eda_05_length_by_label.png\n")
 
 # --------------------------------------------------------------------------
 # 1.8  SAVE CLEANED DATASETS FOR NEXT STAGE
 # --------------------------------------------------------------------------
-saveRDS(amazon, "dataset/amazon_clean_stage1.rds")
-saveRDS(fake,   "dataset/fake_clean_stage1.rds")
+saveRDS(amazon, "data/amazon_clean_stage1.rds")
+saveRDS(fake,   "data/fake_clean_stage1.rds")
 
 cat("\n=== Stage 1 Complete ===\n")
 cat("Outputs:\n")
 cat("  data/amazon_clean_stage1.rds\n")
 cat("  data/fake_clean_stage1.rds\n")
-cat("  figures/eda_01 through eda_05\n")
+cat("  results/figures/eda_01 through eda_05\n")
 cat("\nNext step: Run R/02_preprocess.R\n")

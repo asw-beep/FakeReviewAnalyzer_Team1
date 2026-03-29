@@ -12,7 +12,7 @@ library(topicmodels)
 library(scales)
 
 cat("Loading Stage 4 data...\n")
-amazon <- readRDS("dataset/amazon_stage4.rds")
+amazon <- readRDS("data/amazon_stage4.rds")
 cat("Amazon:", nrow(amazon), "rows\n")
 
 # --------------------------------------------------------------------------
@@ -129,7 +129,7 @@ p1 <- top_terms %>%
   theme_minimal(base_size = 10) +
   theme(plot.title = element_text(face = "bold"))
 
-ggsave("figures/fig10_lda_top_terms.png", p1, width = 14, height = 8, dpi = 150)
+ggsave("results/figures/fig10_lda_top_terms.png", p1, width = 14, height = 8, dpi = 150)
 
 ## Fig: Topic frequency distribution
 p2 <- amazon_lda %>%
@@ -145,18 +145,18 @@ p2 <- amazon_lda %>%
   theme_minimal(base_size = 13) +
   theme(plot.title = element_text(face = "bold"))
 
-ggsave("figures/fig11_topic_distribution.png", p2, width = 9, height = 6, dpi = 150)
+ggsave("results/figures/fig11_topic_distribution.png", p2, width = 9, height = 6, dpi = 150)
 
-cat("Saved: figures/fig10_lda_top_terms.png\n")
-cat("Saved: figures/fig11_topic_distribution.png\n")
+cat("Saved: results/figures/fig10_lda_top_terms.png\n")
+cat("Saved: results/figures/fig11_topic_distribution.png\n")
 
 # --------------------------------------------------------------------------
 # 5.7  SAVE
 # --------------------------------------------------------------------------
-saveRDS(lda_model,  "dataset/lda_model.rds")
-saveRDS(amazon_lda, "dataset/amazon_stage5.rds")
+saveRDS(lda_model,  "data/lda_model.rds")
+saveRDS(amazon_lda, "data/amazon_stage5.rds")
 
 cat("\n=== Stage 5 Complete ===\n")
-cat("Saved: dataset/lda_model.rds\n")
-cat("Saved: dataset/amazon_stage5.rds\n")
+cat("Saved: data/lda_model.rds\n")
+cat("Saved: data/amazon_stage5.rds\n")
 cat("Next: run 06_graph_analysis.R\n")

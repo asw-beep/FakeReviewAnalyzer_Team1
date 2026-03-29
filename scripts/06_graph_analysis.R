@@ -11,7 +11,7 @@ library(igraph)
 library(scales)
 
 cat("Loading Stage 4 data...\n")
-amazon <- readRDS("dataset/amazon_stage4.rds")
+amazon <- readRDS("data/amazon_stage4.rds")
 cat("Amazon:", nrow(amazon), "rows\n")
 
 # --------------------------------------------------------------------------
@@ -180,7 +180,7 @@ p1 <- reviewer_features %>%
   theme_minimal(base_size = 13) +
   theme(plot.title = element_text(face = "bold"))
 
-ggsave("figures/fig12_five_star_ratio.png", p1, width = 7, height = 5, dpi = 150)
+ggsave("results/figures/fig12_five_star_ratio.png", p1, width = 7, height = 5, dpi = 150)
 
 ## Fig: Review velocity distribution
 p2 <- reviewer_features %>%
@@ -194,7 +194,7 @@ p2 <- reviewer_features %>%
   theme_minimal(base_size = 13) +
   theme(plot.title = element_text(face = "bold"))
 
-ggsave("figures/fig13_review_velocity.png", p2, width = 7, height = 5, dpi = 150)
+ggsave("results/figures/fig13_review_velocity.png", p2, width = 7, height = 5, dpi = 150)
 
 ## Fig: Graph plot of largest suspicious cluster
 if (vcount(g) > 0 && ecount(g) > 0) {
@@ -203,7 +203,7 @@ if (vcount(g) > 0 && ecount(g) > 0) {
   largest   <- which.max(comp$csize)
   subg      <- induced_subgraph(g, which(comp$membership == largest))
 
-  png("figures/fig14_reviewer_graph.png", width = 800, height = 800, res = 150)
+  png("results/figures/fig14_reviewer_graph.png", width = 800, height = 800, res = 150)
   plot(subg,
        vertex.color = "#de2d26",
        vertex.size  = 6,
@@ -213,20 +213,20 @@ if (vcount(g) > 0 && ecount(g) > 0) {
        layout       = layout_with_fr(subg),
        main         = "Largest Suspicious Co-Review Cluster")
   dev.off()
-  cat("Saved: figures/fig14_reviewer_graph.png\n")
+  cat("Saved: results/figures/fig14_reviewer_graph.png\n")
 } else {
   cat("Graph too sparse for visualization — skipping graph plot\n")
 }
 
-cat("Saved: figures/fig12, fig13\n")
+cat("Saved: results/figures/fig12, fig13\n")
 
 # --------------------------------------------------------------------------
 # 6.7  SAVE
 # --------------------------------------------------------------------------
-saveRDS(amazon,           "dataset/amazon_stage6.rds")
-saveRDS(reviewer_features,"dataset/reviewer_features.rds")
+saveRDS(amazon,           "data/amazon_stage6.rds")
+saveRDS(reviewer_features,"data/reviewer_features.rds")
 
 cat("\n=== Stage 6 Complete ===\n")
-cat("Saved: dataset/amazon_stage6.rds\n")
-cat("Saved: dataset/reviewer_features.rds\n")
+cat("Saved: data/amazon_stage6.rds\n")
+cat("Saved: data/reviewer_features.rds\n")
 cat("Next: run 07_anomaly_detection.R\n")

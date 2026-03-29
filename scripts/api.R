@@ -14,8 +14,8 @@ library(randomForest)
 # ── Load assets once at startup ──────────────────────────────────────────────
 cat("Loading model and vocabulary...\n")
 rf_model <- readRDS("trained_models/random_forest.rds")
-vocab    <- readRDS("dataset/tfidf_vocabulary.rds")
-fake_ref <- readRDS("dataset/fake_stage4.rds")
+vocab    <- readRDS("data/tfidf_vocabulary.rds")
+fake_ref <- readRDS("data/fake_stage4.rds")
 
 model_features <- rf_model$forest$ncat
 model_colnames <- names(model_features)

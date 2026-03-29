@@ -20,8 +20,8 @@ cat("Review:", review_text, "\n\n")
 
 # Load saved assets
 rf_model <- readRDS("trained_models/random_forest.rds")
-vocab    <- readRDS("dataset/tfidf_vocabulary.rds")
-fake_ref <- readRDS("dataset/fake_stage4.rds")
+vocab    <- readRDS("data/tfidf_vocabulary.rds")
+fake_ref <- readRDS("data/fake_stage4.rds")
 
 # --------------------------------------------------------------------------
 # STEP 1: Get exact column names the model expects

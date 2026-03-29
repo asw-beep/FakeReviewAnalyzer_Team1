@@ -15,8 +15,8 @@ library(Matrix)
 # 3.1  LOAD STAGE 2 OUTPUT
 # --------------------------------------------------------------------------
 cat("Loading Stage 2 data...\n")
-amazon <- readRDS("dataset/amazon_stage2.rds")
-fake   <- readRDS("dataset/fake_stage2.rds")
+amazon <- readRDS("data/amazon_stage2.rds")
+fake   <- readRDS("data/fake_stage2.rds")
 cat("Amazon:", nrow(amazon), "rows\n")
 cat("Fake:  ", nrow(fake),   "rows\n")
 
@@ -75,7 +75,7 @@ top_terms <- fake_tfidf %>%
 cat("Top 5000 TF-IDF terms selected\n")
 
 # Save vocabulary for later use (sentiment stage, classifier)
-saveRDS(top_terms, "dataset/tfidf_vocabulary.rds")
+saveRDS(top_terms, "data/tfidf_vocabulary.rds")
 
 # Build sparse document-term matrix
 fake_dtm <- fake_tfidf %>%
@@ -115,7 +115,7 @@ p1 <- fake %>%
   theme_minimal(base_size = 13) +
   theme(plot.title = element_text(face = "bold"), legend.position = "top")
 
-ggsave("figures/fig05_length_distribution.png", p1, width = 7, height = 5, dpi = 150)
+ggsave("results/figures/fig05_length_distribution.png", p1, width = 7, height = 5, dpi = 150)
 
 ## Exclamation count by label
 p2 <- fake %>%
@@ -128,21 +128,21 @@ p2 <- fake %>%
   theme_minimal(base_size = 13) +
   theme(plot.title = element_text(face = "bold"), legend.position = "top")
 
-ggsave("figures/fig06_exclaim_count.png", p2, width = 7, height = 5, dpi = 150)
+ggsave("results/figures/fig06_exclaim_count.png", p2, width = 7, height = 5, dpi = 150)
 
-cat("Saved: figures/fig05_length_distribution.png\n")
-cat("Saved: figures/fig06_exclaim_count.png\n")
+cat("Saved: results/figures/fig05_length_distribution.png\n")
+cat("Saved: results/figures/fig06_exclaim_count.png\n")
 
 # --------------------------------------------------------------------------
 # 3.6  SAVE FOR NEXT STAGE
 # --------------------------------------------------------------------------
-saveRDS(amazon,   "dataset/amazon_stage3.rds")
-saveRDS(fake,     "dataset/fake_stage3.rds")
-saveRDS(fake_dtm, "dataset/fake_tfidf_matrix.rds")
+saveRDS(amazon,   "data/amazon_stage3.rds")
+saveRDS(fake,     "data/fake_stage3.rds")
+saveRDS(fake_dtm, "data/fake_tfidf_matrix.rds")
 
 cat("\n=== Stage 3 Complete ===\n")
-cat("Saved: dataset/amazon_stage3.rds\n")
-cat("Saved: dataset/fake_stage3.rds\n")
-cat("Saved: dataset/fake_tfidf_matrix.rds\n")
-cat("Saved: dataset/tfidf_vocabulary.rds\n")
+cat("Saved: data/amazon_stage3.rds\n")
+cat("Saved: data/fake_stage3.rds\n")
+cat("Saved: data/fake_tfidf_matrix.rds\n")
+cat("Saved: data/tfidf_vocabulary.rds\n")
 cat("Next: run 04_sentiment.R\n")

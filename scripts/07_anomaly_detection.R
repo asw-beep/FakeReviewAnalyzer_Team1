@@ -11,7 +11,7 @@ library(isotree)
 library(scales)
 
 cat("Loading Stage 6 data...\n")
-amazon <- readRDS("dataset/amazon_stage6.rds")
+amazon <- readRDS("data/amazon_stage6.rds")
 cat("Amazon:", nrow(amazon), "rows\n")
 
 # --------------------------------------------------------------------------
@@ -124,7 +124,7 @@ p1 <- product_features %>%
   theme_minimal(base_size = 13) +
   theme(plot.title = element_text(face = "bold"), legend.position = "top")
 
-ggsave("figures/fig15_anomaly_scatter.png", p1, width = 8, height = 6, dpi = 150)
+ggsave("results/figures/fig15_anomaly_scatter.png", p1, width = 8, height = 6, dpi = 150)
 
 ## Fig: Anomaly score distribution
 p2 <- product_features %>%
@@ -141,22 +141,22 @@ p2 <- product_features %>%
   theme_minimal(base_size = 13) +
   theme(plot.title = element_text(face = "bold"))
 
-ggsave("figures/fig16_anomaly_score_dist.png", p2, width = 7, height = 5, dpi = 150)
+ggsave("results/figures/fig16_anomaly_score_dist.png", p2, width = 7, height = 5, dpi = 150)
 
-cat("Saved: figures/fig15_anomaly_scatter.png\n")
-cat("Saved: figures/fig16_anomaly_score_dist.png\n")
+cat("Saved: results/figures/fig15_anomaly_scatter.png\n")
+cat("Saved: results/figures/fig16_anomaly_score_dist.png\n")
 
 # --------------------------------------------------------------------------
 # 7.6  SAVE
 # --------------------------------------------------------------------------
 dir.create("trained_models", showWarnings = FALSE)
 
-saveRDS(amazon,           "dataset/amazon_stage7.rds")
-saveRDS(product_features, "dataset/product_features.rds")
+saveRDS(amazon,           "data/amazon_stage7.rds")
+saveRDS(product_features, "data/product_features.rds")
 saveRDS(iso_model,        "trained_models/isolation_forest.rds")
 
 cat("\n=== Stage 7 Complete ===\n")
-cat("Saved: dataset/amazon_stage7.rds\n")
-cat("Saved: dataset/product_features.rds\n")
+cat("Saved: data/amazon_stage7.rds\n")
+cat("Saved: data/product_features.rds\n")
 cat("Saved: trained_models/isolation_forest.rds\n")
 cat("Next: run 08_classification.R\n")

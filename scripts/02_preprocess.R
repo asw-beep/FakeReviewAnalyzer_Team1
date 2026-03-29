@@ -15,8 +15,8 @@ library(SnowballC)
 # 2.1  LOAD STAGE 1 OUTPUT
 # --------------------------------------------------------------------------
 cat("Loading Stage 1 data...\n")
-amazon <- readRDS("dataset/amazon_stage1.rds")
-fake   <- readRDS("dataset/fake_stage1.rds")
+amazon <- readRDS("data/amazon_stage1.rds")
+fake   <- readRDS("data/fake_stage1.rds")
 cat("Amazon:", nrow(amazon), "rows\n")
 cat("Fake:  ", nrow(fake),   "rows\n")
 
@@ -88,10 +88,10 @@ cat("Fake after removing empty clean rows:  ", nrow(fake),   "\n")
 # --------------------------------------------------------------------------
 # 2.6  SAVE FOR NEXT STAGE
 # --------------------------------------------------------------------------
-saveRDS(amazon, "dataset/amazon_stage2.rds")
-saveRDS(fake,   "dataset/fake_stage2.rds")
+saveRDS(amazon, "data/amazon_stage2.rds")
+saveRDS(fake,   "data/fake_stage2.rds")
 
 cat("\n=== Stage 2 Complete ===\n")
-cat("Saved: dataset/amazon_stage2.rds\n")
-cat("Saved: dataset/fake_stage2.rds\n")
+cat("Saved: data/amazon_stage2.rds\n")
+cat("Saved: data/fake_stage2.rds\n")
 cat("Next: run 03_features.R\n")
